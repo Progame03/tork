@@ -1,8 +1,9 @@
 # Tork
-An arcade vehicle system for Unity
+A semi-arcade vehicle system for Unity
 
 # Intro
-Tork is not meant to be a realistic vehicle physics solution. It is best deployed in games where driving realism, especially at high velocities, is secondary. For example, demolition derby style games or games where driving is a secondary gameplay element. You could probably get away using it in a parking game.
+This is a branch of Tork Vehicle Dynamics originally made by Adrenak which targets semi-arcade style games
+This Iteration of Tork improves/changes many things like stability with high masses and velocity and also will include tools for modding the game "My Summer Car"
 
 Tork has its own Wheel physics component simply called `TorkWheel` which provides a greatly simplified friction computation mechanism. There are only three tweakable parametes: `forward grip`, `sideways grip` and `rolling friction`. 
 
@@ -22,7 +23,7 @@ A simplified version of Unity's `Wheel Collider`. Much of the information of thi
 Tork uses Ackermann steering to turn the wheels in a realistic manner.
 
 ### Motor
-Essentially the engine of the vehicle. Has a `maxTorque` field that determines the maximum torque it can deliver. It also distributes it among the wheels smartly using the `Ackermann` component of the vehicle. Currently it only supports `All Wheel Drive` with other modes coming soon.
+Essentially the engine of the vehicle. Has a `maxTorque` field that determines the maximum torque it can deliver. It also distributes it among the wheels smartly using the `Ackermann` component of the vehicle. Currently it only supports `All Wheel Drive` with other modes in the works (wheels can be individually marked as "driven").
   
 `Value` is the normalized value of the engines output. So `.5` would mean the engine is creating `maxTorque/2` torque.
   
@@ -64,15 +65,7 @@ Synchronises the wheel meshes with the rotation and position of their respective
 Many, many addons can be made. Some ideas I have: A `BrakeLights` that makes the tail lamps illuminate. `SteeringWheelSync` that rotates the wheel along with the steering input.
 
 ## Input
-The way input is provided and handled by the code and add on scripts may change, especially because it's like that as more add ons accumulate, it'd be good to make it available for reading some a common place. For now `IVehicleDriver` interface is to be extended. `KeyboardVehicleDriver` is inbuilt in Tork. 
+The way input is provided and handled by the code and add on scripts may change, especially because it's like that as more add ons accumulate, it'd be good to make it available for reading some a common place. For now `IVehicleDriver` interface is to be extended. `KeyboardVehicleDriver` is built into Tork. 
 
 ## Demo
 A demo scene and script is provided inside `Tork/Samples/`
-
-### Forks
-For a DOTS implementation of Tork v1, check out [@PragneshRathod901's fork](https://github.com/PragneshRathod901/Tork)
-
-### Contact
-[@github](https://www.github.com/adrenak)  
-[@www](http://www.vatsalambastha.com)  
-[@npm](https://www.npmjs.com/~adrenak)  
