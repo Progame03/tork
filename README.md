@@ -3,6 +3,7 @@ A semi-arcade vehicle system for Unity
 
 # Intro
 This is a branch of Tork Vehicle Dynamics originally made by Adrenak which targets semi-arcade style games
+
 This Iteration of Tork improves/changes many things like stability with high masses and velocity and also will include tools for modding the game "My Summer Car"
 
 Tork has its own Wheel physics component simply called `TorkWheel` which provides a greatly simplified friction computation mechanism. There are only three tweakable parametes: `forward grip`, `sideways grip` and `rolling friction`. 
