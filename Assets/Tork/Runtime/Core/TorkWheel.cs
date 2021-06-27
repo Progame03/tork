@@ -10,6 +10,7 @@
    ratio would still hold. Or maybe it won't. Please change the value as you prefer.
  */
 
+using System;
 using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -17,7 +18,9 @@ using UnityEngine.Assertions.Must;
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
         // See at the top of the file for NOTE (A) to read about this.
-        const float engineShaftToWheelRatio = 25;
+        public float engineShaftToWheelRatio = 25;
+
+        public bool isDrivenWheel = false;
 
         [Tooltip("The radius of the wheel")]
         /// <summary>
@@ -140,6 +143,9 @@ namespace Adrenak.Tork {
         public const float k_ExtraRayLength = 1;
         public float RayLength => springLength + radius + k_ExtraRayLength;
 
+        [HideInInspector]
+        public float RPM { get; private set; }
+
         void Start() {
             m_Ray = new Ray();
 
@@ -168,7 +174,7 @@ namespace Adrenak.Tork {
         void CalculateRPM() {
             float metersPerMinute = rigidbody.velocity.magnitude * 60;
             float wheelCircumference = 2 * Mathf.PI * radius;
-            //RPM = metersPerMinute / wheelCircumference;
+            RPM = metersPerMinute / wheelCircumference;
         }
 
         void CalculateSuspension() {
@@ -197,7 +203,7 @@ namespace Adrenak.Tork {
             float rate = (m_PrevCompressionDist - compressionDistance) / Time.fixedDeltaTime;
             m_PrevCompressionDist = compressionDistance;
 
-            float dampingForce = rate * springStrength * springDamper;
+            float dampingForce = rate * springDamper;
             force -= dampingForce;
 
             suspensionForce = transform.up * force;
@@ -220,9 +226,9 @@ namespace Adrenak.Tork {
 
             Vector3 lateralVelocity = Vector3.Project(velocity, right);
             Vector3 forwardVelocity = Vector3.Project(velocity, forward);
-            Vector3 slip = (forwardVelocity + lateralVelocity) / 2;
+            Vector3 slip = ((forwardVelocity + lateralVelocity)*(forwardFrictionCoeff+lateralFrictionCoeff)/2) / 2;
 
-            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * lateralFrictionCoeff;
+            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * ((Math.Abs(GetComponentInParent<Vehicle>().Rigidbody.velocity.z) > (0.9f*lateralFrictionCoeff)+0.5f) ? lateralFrictionCoeff:0.5f);
             rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, hit.point);
 
             float motorForce = motorTorque / radius;
