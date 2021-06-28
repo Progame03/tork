@@ -17,11 +17,17 @@ using UnityEngine.Assertions.Must;
 
 namespace Adrenak.Tork {
     public class TorkWheel : MonoBehaviour {
+        [Header("Axle Setup")]
         // See at the top of the file for NOTE (A) to read about this.
+        [Tooltip("Wheelsize to Axle diameter(Example: A car with wheels of diameter ~55cm usually has axle of diameter 2.2cm. That's a ratio of 25.)")]
         public float engineShaftToWheelRatio = 25;
 
+        [Tooltip("If the Wheels reveives torque")]
         public bool isDrivenWheel = false;
-
+        [Tooltip("Makes you able for a biased drivetrain setting (important for AWD)")]
+        [Range(0f,1f)]
+        public float torqueFactor = 1;
+        [Space(15)]
         [Tooltip("The radius of the wheel")]
         /// <summary>
         /// The radius of the wheel
@@ -228,11 +234,11 @@ namespace Adrenak.Tork {
             Vector3 forwardVelocity = Vector3.Project(velocity, forward);
             Vector3 slip = ((forwardVelocity + lateralVelocity)*(forwardFrictionCoeff+lateralFrictionCoeff)/2) / 2;
 
-            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * ((Math.Abs(GetComponentInParent<Vehicle>().Rigidbody.velocity.z) > (0.9f*lateralFrictionCoeff)+0.5f) ? lateralFrictionCoeff:0.5f);
+            float lateralFriction = Vector3.Project(right, slip).magnitude * suspensionForce.magnitude / 9.8f / Time.fixedDeltaTime * ((Math.Abs(GetComponentInParent<Vehicle>().Rigidbody.velocity.z) > (0.9f*lateralFrictionCoeff*Time.fixedDeltaTime)+0.5f) ? lateralFrictionCoeff:0.1f);
             rigidbody.AddForceAtPosition(-Vector3.Project(slip, lateralVelocity).normalized * lateralFriction, hit.point);
 
             float motorForce = motorTorque / radius;
-            float maxForwardFriction = motorForce * forwardFrictionCoeff;
+            float maxForwardFriction = (isDrivenWheel)?motorForce*torqueFactor:0 * forwardFrictionCoeff;
             float appliedForwardFriction = 0;
             if (motorForce > 0)
                 appliedForwardFriction = Mathf.Clamp(motorForce, 0, maxForwardFriction);
