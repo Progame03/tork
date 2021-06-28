@@ -8,7 +8,7 @@ This Iteration of Tork improves/changes many things like stability with high mas
 
 Tork has its own Wheel physics component simply called `TorkWheel` which provides a greatly simplified friction computation mechanism. There are only three tweakable parametes: `forward grip`, `sideways grip` and `rolling friction`. 
 
-It provides spring customization which is quite similar to the inbuilt `WheelCollider` in Unity.
+It provides spring customization which is quite similar to the built in `WheelCollider` in Unity.
 
 `TorkWheel` also provides recommended values and guidelines for tweaking values.
 
